@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>AR Web Application</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +9,7 @@
     <script src="https://raw.githack.com/donmccurdy/aframe-extras/master/dist/aframe-extras.loaders.min.js"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body style="margin: 0; overflow: hidden;">
     <!-- UI Instructions Panel -->
     <div id="instructionsPanel" class="instructions-panel">
@@ -28,28 +30,30 @@
 
     <!-- AR Scene -->
     <a-scene embedded arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
-             renderer="logarithmicDepthBuffer: true;"
-             vr-mode-ui="enabled: false">
+        renderer="logarithmicDepthBuffer: true;" vr-mode-ui="enabled: false">
 
         <!-- Asset Management System -->
-        <a-assets>
+        <!-- <a-assets>
             <a-asset-item id="robot" src="https://cdn.aframe.io/examples/robot-head/RobotHead.gltf"></a-asset-item>
             <a-asset-item id="tree" src="https://cdn.aframe.io/examples/tree1/tree1.gltf"></a-asset-item>
             <a-asset-item id="duck" src="https://cdn.aframe.io/examples/duck/duck.gltf"></a-asset-item>
+            
+        </a-assets> -->
+        <a-assets>
+            <!-- Using basic shapes instead of GLTF models for reliability -->
+            <a-asset-item id="marker"
+                src="https://raw.githubusercontent.com/AR-js-org/AR.js/master/data/data/patt.hiro"></a-asset-item>
         </a-assets>
 
         <!-- Marker -->
         <a-marker preset="hiro" raycaster="objects: .clickable" emitevents="true">
             <!-- Grid for visual feedback -->
-            <a-plane position="0 0 0" 
-                     rotation="-90 0 0" 
-                     width="1" 
-                     height="1" 
-                     material="color: #fff; opacity: 0.5; wireframe: true">
+            <a-plane position="0 0 0" rotation="-90 0 0" width="1" height="1"
+                material="color: #fff; opacity: 0.5; wireframe: true">
             </a-plane>
 
             <!-- 3D Models -->
-            <a-entity position="0 0.5 0" 
+            <!-- <a-entity position="0 0.5 0" 
                       gltf-model="#robot" 
                       class="clickable" 
                       scale="0.5 0.5 0.5"
@@ -68,7 +72,19 @@
                       class="clickable" 
                       scale="0.5 0.5 0.5"
                       animation-mixer>
-            </a-entity>
+            </a-entity> -->
+
+            <!-- Using basic shapes instead of GLTF models -->
+            <a-box position="0 0.5 0" class="clickable" scale="0.5 0.5 0.5" material="color: #FF0000"
+                animation="property: rotation; to: 0 360 0; dur: 2000; easing: linear; loop: true">
+            </a-box>
+
+            <a-sphere position="-1 0.5 0" class="clickable" radius="0.5" scale="0.5 0.5 0.5" material="color: #00FF00">
+            </a-sphere>
+
+            <a-cylinder position="1 0.5 0" class="clickable" radius="0.5" height="1" scale="0.5 0.5 0.5"
+                material="color: #0000FF">
+            </a-cylinder>
         </a-marker>
 
         <!-- Camera -->
@@ -77,4 +93,5 @@
 
     <script src="app.js"></script>
 </body>
+
 </html>
