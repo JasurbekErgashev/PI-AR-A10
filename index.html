@@ -33,58 +33,53 @@
         renderer="logarithmicDepthBuffer: true;" vr-mode-ui="enabled: false">
 
         <!-- Asset Management System -->
-        <!-- <a-assets>
-            <a-asset-item id="robot" src="https://cdn.aframe.io/examples/robot-head/RobotHead.gltf"></a-asset-item>
-            <a-asset-item id="tree" src="https://cdn.aframe.io/examples/tree1/tree1.gltf"></a-asset-item>
-            <a-asset-item id="duck" src="https://cdn.aframe.io/examples/duck/duck.gltf"></a-asset-item>
+        <a-assets timeout="5000">
+            <!-- High-quality 3D Models from Sketchfab -->
+            <a-asset-item id="robot" src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/models/gltf/RobotExpressive/RobotExpressive.glb"></a-asset-item>
+            <a-asset-item id="astronaut" src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/models/gltf/Astronaut/glTF/Astronaut.glb"></a-asset-item>
+            <a-asset-item id="car" src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/models/gltf/Ferrari/glTF/Ferrari.glb"></a-asset-item>
             
-        </a-assets> -->
-        <a-assets>
-            <!-- Using basic shapes instead of GLTF models for reliability -->
-            <a-asset-item id="marker"
-                src="https://raw.githubusercontent.com/AR-js-org/AR.js/master/data/data/patt.hiro"></a-asset-item>
+            <!-- Textures and Environment Maps -->
+            <img id="sky-texture" src="https://cdn.jsdelivr.net/gh/mrdoob/three.js@dev/examples/textures/cube/Park2/posx.jpg">
         </a-assets>
+
+        <!-- Sky and Environment -->
+        <a-sky src="#sky-texture" color="#87CEEB"></a-sky>
 
         <!-- Marker -->
         <a-marker preset="hiro" raycaster="objects: .clickable" emitevents="true">
             <!-- Grid for visual feedback -->
-            <a-plane position="0 0 0" rotation="-90 0 0" width="1" height="1"
-                material="color: #fff; opacity: 0.5; wireframe: true">
+            <a-plane position="0 0 0" rotation="-90 0 0" width="2" height="2"
+                material="color: #fff; opacity: 0.3; wireframe: true">
             </a-plane>
 
-            <!-- 3D Models -->
-            <!-- <a-entity position="0 0.5 0" 
+            <!-- 3D Models with Enhanced Interactions -->
+            <a-entity position="0 1 0" 
                       gltf-model="#robot" 
                       class="clickable" 
                       scale="0.5 0.5 0.5"
-                      animation-mixer>
+                      animation-mixer
+                      shadow="cast: true; receive: true"
+                      dynamic-body>
             </a-entity>
 
-            <a-entity position="-1 0.5 0" 
-                      gltf-model="#tree" 
+            <a-entity position="-1 1 0" 
+                      gltf-model="#astronaut" 
                       class="clickable" 
-                      scale="0.5 0.5 0.5"
-                      animation-mixer>
+                      scale="0.3 0.3 0.3"
+                      animation-mixer
+                      shadow="cast: true; receive: true"
+                      dynamic-body>
             </a-entity>
 
-            <a-entity position="1 0.5 0" 
-                      gltf-model="#duck" 
+            <a-entity position="1 1 0" 
+                      gltf-model="#car" 
                       class="clickable" 
-                      scale="0.5 0.5 0.5"
-                      animation-mixer>
-            </a-entity> -->
-
-            <!-- Using basic shapes instead of GLTF models -->
-            <a-box position="0 0.5 0" class="clickable" scale="0.5 0.5 0.5" material="color: #FF0000"
-                animation="property: rotation; to: 0 360 0; dur: 2000; easing: linear; loop: true">
-            </a-box>
-
-            <a-sphere position="-1 0.5 0" class="clickable" radius="0.5" scale="0.5 0.5 0.5" material="color: #00FF00">
-            </a-sphere>
-
-            <a-cylinder position="1 0.5 0" class="clickable" radius="0.5" height="1" scale="0.5 0.5 0.5"
-                material="color: #0000FF">
-            </a-cylinder>
+                      scale="0.2 0.2 0.2"
+                      animation-mixer
+                      shadow="cast: true; receive: true"
+                      dynamic-body>
+            </a-entity>
         </a-marker>
 
         <!-- Camera -->
