@@ -72,11 +72,11 @@ Easily modify:
 - WebXR
 - CSS Animations
 
-## 📄 License
+<!-- ## 📄 License
 
 MIT License
 
 ## 🤝 Contributing
 
 Contributions welcome! 
-Please read our contributing guidelines before getting started.
+Please read our contributing guidelines before getting started. -->
