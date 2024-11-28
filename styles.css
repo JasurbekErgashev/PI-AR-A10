@@ -1,73 +1,120 @@
+/* Modern, Clean Design */
+body {
+    font-family: 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    margin: 0;
+    overflow: hidden;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+/* Refined Instructions Panel */
 .instructions-panel {
     position: fixed;
     top: 20px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(255, 255, 255, 0.95);
     padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     z-index: 1000;
-    max-width: 80%;
+    max-width: 90%;
+    width: 300px;
     text-align: left;
+    transition: all 0.3s ease;
+}
+
+.instructions-panel:hover {
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    transform: translateX(-50%) scale(1.02);
 }
 
 .instructions-panel h2 {
     margin-top: 0;
-    color: #333;
+    color: #2c3e50;
+    font-weight: 500;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 10px;
+}
+
+.instructions-panel ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.instructions-panel li {
+    margin-bottom: 8px;
+    position: relative;
+    padding-left: 20px;
+}
+
+.instructions-panel li:before {
+    content: '✓';
+    color: #3498db;
+    position: absolute;
+    left: 0;
 }
 
 .instructions-panel button {
-    background: #007bff;
+    background: linear-gradient(to right, #3498db, #2980b9);
     color: white;
     border: none;
-    padding: 8px 16px;
-    border-radius: 5px;
+    padding: 10px 20px;
+    border-radius: 25px;
     cursor: pointer;
-    margin-top: 10px;
+    transition: all 0.3s ease;
+    margin-top: 15px;
+    font-weight: 500;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .instructions-panel button:hover {
-    background: #0056b3;
+    background: linear-gradient(to right, #2980b9, #3498db);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
 }
 
+/* Enhanced Feedback Message */
 .feedback-message {
     position: fixed;
-    bottom: 20px;
+    bottom: 30px;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.7);
-    color: white;
-    padding: 10px 20px;
-    border-radius: 20px;
-    display: none;
-    z-index: 1000;
-}
-
-/* Loading indicator */
-.loading {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     background: rgba(0, 0, 0, 0.8);
     color: white;
-    padding: 20px;
-    border-radius: 10px;
+    padding: 12px 24px;
+    border-radius: 30px;
+    display: none;
     z-index: 1000;
+    font-weight: 500;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    max-width: 80%;
+    text-align: center;
+    animation: fadeInOut 3s ease;
 }
 
-/* Touch areas for mobile */
+@keyframes fadeInOut {
+    0%, 100% { opacity: 0; }
+    10%, 90% { opacity: 1; }
+}
+
+/* Responsive Touch Controls */
 .touch-control {
     position: fixed;
-    width: 80px;
-    height: 80px;
-    background: rgba(255, 255, 255, 0.2);
+    width: 70px;
+    height: 70px;
+    background: rgba(52, 152, 219, 0.2);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 900;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.touch-control:hover {
+    background: rgba(52, 152, 219, 0.3);
+    transform: scale(1.1);
 }
 
 .rotate-control {
@@ -78,4 +125,36 @@
 .scale-control {
     bottom: 20px;
     left: 20px;
+}
+
+/* Loading Indicator */
+.loading {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.loading::after {
+    content: '';
+    width: 30px;
+    height: 30px;
+    border: 3px solid white;
+    border-top: 3px solid #3498db;
+    border-radius: 50%;
+    margin-left: 15px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
