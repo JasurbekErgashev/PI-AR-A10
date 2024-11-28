@@ -38,13 +38,10 @@
         <a-asset-item id="robot" src="https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/RobotExpressive/RobotExpressive.glb" crossorigin="anonymous"></a-asset-item>
         <a-asset-item id="soldier" src="https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/Soldier.glb" crossorigin="anonymous"></a-asset-item>
         <a-asset-item id="car" src="https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/ferrari.glb" crossorigin="anonymous"></a-asset-item>
-        
-        <!-- Textures and Environment Maps -->
-        <img id="sky-texture" src="https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/cube/Park2/posx.jpg" crossorigin="anonymous">
     </a-assets>
 
         <!-- Sky and Environment -->
-        <a-sky src="#sky-texture" color="#87CEEB" opacity="0.3" radius="100"></a-sky>
+        <a-sky color="#87CEEB"></a-sky>
 
         <!-- Marker -->
         <a-marker preset="hiro" raycaster="objects: .clickable" emitevents="true">
