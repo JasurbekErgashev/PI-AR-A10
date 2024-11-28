@@ -32,16 +32,16 @@
     <a-scene embedded arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
         renderer="logarithmicDepthBuffer: true;" vr-mode-ui="enabled: false">
 
-        <!-- Asset Management System -->
-        <a-assets timeout="5000">
-            <!-- High-quality 3D Models from Sketchfab -->
-            <a-asset-item id="robot" src="https://github.com/mrdoob/three.js/blob/dev/examples/models/gltf/RobotExpressive/RobotExpressive.glb"></a-asset-item>
-            <a-asset-item id="soldier" src="https://github.com/mrdoob/three.js/blob/dev/examples/models/gltf/Soldier.glb"></a-asset-item>
-            <a-asset-item id="car" src="https://github.com/mrdoob/three.js/blob/dev/examples/models/gltf/ferrari.glb"></a-asset-item>
-            
-            <!-- Textures and Environment Maps -->
-            <img id="sky-texture" src="https://github.com/mrdoob/three.js/blob/dev/examples/textures/cube/Park2/posx.jpg">
-        </a-assets>
+    <!-- Asset Management System -->
+    <a-assets timeout="5000">
+        <!-- High-quality 3D Models from Three.js Examples -->
+        <a-asset-item id="robot" src="https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/RobotExpressive/RobotExpressive.glb" crossorigin="anonymous"></a-asset-item>
+        <a-asset-item id="soldier" src="https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/Soldier.glb" crossorigin="anonymous"></a-asset-item>
+        <a-asset-item id="car" src="https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/ferrari.glb" crossorigin="anonymous"></a-asset-item>
+        
+        <!-- Textures and Environment Maps -->
+        <img id="sky-texture" src="https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/textures/cube/Park2/posx.jpg" crossorigin="anonymous">
+    </a-assets>
 
         <!-- Sky and Environment -->
         <a-sky src="#sky-texture" color="#87CEEB"></a-sky>
