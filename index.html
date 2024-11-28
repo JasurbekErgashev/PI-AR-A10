@@ -33,7 +33,7 @@
         renderer="logarithmicDepthBuffer: true;" vr-mode-ui="enabled: false">
 
     <!-- Asset Management System -->
-    <a-assets timeout="5000">
+    <a-assets timeout="10000">
         <!-- High-quality 3D Models from Three.js Examples -->
         <a-asset-item id="robot" src="https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/RobotExpressive/RobotExpressive.glb" crossorigin="anonymous"></a-asset-item>
         <a-asset-item id="soldier" src="https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/Soldier.glb" crossorigin="anonymous"></a-asset-item>
@@ -44,7 +44,7 @@
     </a-assets>
 
         <!-- Sky and Environment -->
-        <a-sky src="#sky-texture" color="#87CEEB"></a-sky>
+        <a-sky src="#sky-texture" color="#87CEEB" opacity="0.3" radius="100"></a-sky>
 
         <!-- Marker -->
         <a-marker preset="hiro" raycaster="objects: .clickable" emitevents="true">
