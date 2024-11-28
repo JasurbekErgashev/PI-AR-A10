@@ -77,7 +77,15 @@
         </a-marker>
 
         <!-- Camera -->
-        <a-entity camera></a-entity>
+        <a-entity 
+            camera 
+            look-controls 
+            position="0 1.6 0"
+            zoom="1"
+            fov="60"
+            near="0.1"
+            far="1000">
+        </a-entity>
     </a-scene>
 
     <script src="app.js"></script>
