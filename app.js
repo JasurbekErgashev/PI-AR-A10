@@ -20,7 +20,6 @@ AFRAME.registerComponent('ar-ground-placement', {
         this.el.addEventListener('loaded', this.onSceneLoaded.bind(this));
         this.car = null;
         this.isPlacing = false;
-        this.groundHeight = 0;
         
         // Initialize touch state
         this.touchState = {
@@ -31,33 +30,13 @@ AFRAME.registerComponent('ar-ground-placement', {
             lastRotation: 0
         };
 
+        // Create raycaster for ground detection
+        this.raycaster = new THREE.Raycaster();
+        this.groundPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
+        
         // Bind methods
         this.onTouchMove = this.onTouchMove.bind(this);
         this.onTouchEnd = this.onTouchEnd.bind(this);
-
-        // Add ground plane detection
-        this.initGroundPlane();
-    },
-
-    initGroundPlane: function() {
-        // Create an invisible plane for ground detection
-        const plane = document.createElement('a-plane');
-        plane.setAttribute('id', 'ground-plane');
-        plane.setAttribute('rotation', '-90 0 0');
-        plane.setAttribute('width', '100');
-        plane.setAttribute('height', '100');
-        plane.setAttribute('material', {
-            transparent: true,
-            opacity: 0
-        });
-        plane.setAttribute('class', 'groundplane');
-        this.el.sceneEl.appendChild(plane);
-
-        // Add AR.js hit-testing
-        const arSystem = this.el.sceneEl.systems['arjs'];
-        if (arSystem) {
-            arSystem.registerComponent(this);
-        }
     },
 
     onSceneLoaded: function() {
@@ -116,33 +95,34 @@ AFRAME.registerComponent('ar-ground-placement', {
             this.touchState.lastPosition = { x: touch.clientX, y: touch.clientY };
 
             if (this.isPlacing || !this.car) {
-                this.performHitTest(touch);
+                const position = this.getGroundPosition(touch);
+                if (position) {
+                    this.placeCar(position);
+                    this.isPlacing = false;
+                }
             }
         }
     },
 
-    performHitTest: function(touch) {
-        const scene = this.el.sceneEl;
-        const arSystem = scene.systems['arjs'];
-        
-        if (!arSystem) return;
-
-        // Convert touch coordinates to normalized device coordinates
+    getGroundPosition: function(touch) {
+        // Convert touch coordinates to normalized device coordinates (-1 to +1)
         const x = (touch.clientX / window.innerWidth) * 2 - 1;
         const y = -(touch.clientY / window.innerHeight) * 2 + 1;
 
-        // Perform hit test
-        arSystem.hitTest(x, y, (results) => {
-            if (results && results.length > 0) {
-                const hit = results[0];
-                this.placeCar({
-                    x: hit.position.x,
-                    y: hit.position.y,
-                    z: hit.position.z
-                });
-                this.isPlacing = false;
-            }
-        });
+        // Update the picking ray with the camera and mouse position
+        const camera = this.el.sceneEl.camera;
+        this.raycaster.setFromCamera({ x, y }, camera);
+
+        // Get the intersection point with the ground plane
+        const intersection = new THREE.Vector3();
+        const ray = this.raycaster.ray;
+        
+        if (ray.intersectPlane(this.groundPlane, intersection)) {
+            // Add a small offset to ensure the car is slightly above ground
+            intersection.y += 0.01;
+            return intersection;
+        }
+        return null;
     },
 
     onTouchMove: function(event) {
@@ -204,9 +184,9 @@ AFRAME.registerComponent('ar-ground-placement', {
         this.car.setAttribute('scale', `${this.data.defaultScale} ${this.data.defaultScale} ${this.data.defaultScale}`);
         this.car.setAttribute('shadow', 'cast: true; receive: true');
         this.car.setAttribute('material', { color: color, metalness: 0.8, roughness: 0.2 });
-
-        // Add anchor to keep the car fixed in real-world space
-        this.car.setAttribute('ar-anchor', '');
+        
+        // Add physics to keep the car grounded
+        this.car.setAttribute('static-body', '');
         
         this.el.sceneEl.appendChild(this.car);
         showFeedback('Car placed! Use two fingers to rotate and zoom', 3000);
