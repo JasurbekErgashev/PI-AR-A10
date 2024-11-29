@@ -194,7 +194,48 @@ AFRAME.registerComponent('ar-ground-placement', {
 });
 
 // Wait for A-Frame to load
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', function() {
     const scene = document.querySelector('a-scene');
     scene.setAttribute('ar-ground-placement', '');
+
+    // Hide loading screen when AR.js is ready
+    document.querySelector('a-scene').addEventListener('loaded', function() {
+        document.getElementById('loadingScreen').style.display = 'none';
+    });
+
+    // Handle marker detection and video playback for Great Wall
+    const greatWallMarker = document.querySelector('a-marker[url="markers/great-wall.patt"]');
+    const greatWallVideo = document.querySelector('#great-wall-video');
+
+    greatWallMarker.addEventListener('markerFound', function() {
+        console.log('Great Wall marker detected');
+        greatWallVideo.play();
+    });
+
+    greatWallMarker.addEventListener('markerLost', function() {
+        console.log('Great Wall marker lost');
+        greatWallVideo.pause();
+    });
+
+    // Handle marker detection and video playback for Taj Mahal
+    const tajMahalMarker = document.querySelector('a-marker[url="markers/taj-mahal.patt"]');
+    const tajMahalVideo = document.querySelector('#taj-mahal-video');
+
+    tajMahalMarker.addEventListener('markerFound', function() {
+        console.log('Taj Mahal marker detected');
+        tajMahalVideo.play();
+    });
+
+    tajMahalMarker.addEventListener('markerLost', function() {
+        console.log('Taj Mahal marker lost');
+        tajMahalVideo.pause();
+    });
+
+    // Error handling for video loading
+    const videos = document.querySelectorAll('video');
+    videos.forEach(video => {
+        video.addEventListener('error', function() {
+            console.error('Error loading video:', video.id);
+        });
+    });
 });

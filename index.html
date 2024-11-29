@@ -1,89 +1,53 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-    <title>AR Car Viewer</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>7 Wonders AR Experience</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
     <script src="https://raw.githack.com/donmccurdy/aframe-extras/master/dist/aframe-extras.loaders.min.js"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
-
 <body style="margin: 0; overflow: hidden;">
-    <!-- UI Controls Panel -->
-    <div id="controlsPanel" class="controls-panel">
-        <h2>Car Customization</h2>
-        <div class="control-group">
-            <label>Car Model:</label>
-            <select id="carModel">
-                <option value="ferrari">Ferrari</option>
-                <option value="lamborghini">Lamborghini</option>
-                <option value="muscle">Muscle Car</option>
-            </select>
-        </div>
-        <div class="control-group">
-            <label>Car Color:</label>
-            <input type="color" id="carColor" value="#ff0000">
-        </div>
-        <div class="control-group">
-            <button id="placeCar">Place Car</button>
-            <button id="resetView">Reset View</button>
+    <div class="loading-screen" id="loadingScreen">
+        <div class="loading-content">
+            <h2>7 Wonders AR Experience</h2>
+            <p>Point your camera at an image of any of the 7 Wonders to see it come alive!</p>
+            <div class="loading-spinner"></div>
         </div>
     </div>
 
-    <!-- Instructions Panel -->
-    <div id="instructionsPanel" class="instructions-panel">
-        <h2>AR Instructions</h2>
-        <p>1. Allow camera access</p>
-        <p>2. Point camera at the ground</p>
-        <p>3. Tap to place car or use 'Place Car' button</p>
-        <p>4. Interact with the car:</p>
-        <ul>
-            <li>Pinch to zoom</li>
-            <li>Rotate with two fingers</li>
-            <li>Use controls to customize</li>
-        </ul>
-        <button onclick="this.parentElement.style.display='none'">Got it!</button>
-    </div>
-
-    <!-- Feedback Message -->
-    <div id="feedbackMessage" class="feedback-message"></div>
-
-    <!-- AR Scene -->
-    <a-scene embedded 
-        arjs="trackingMethod: best; 
-              sourceType: webcam; 
-              debugUIEnabled: false;"
-        renderer="logarithmicDepthBuffer: true; antialias: true;"
-        physics="gravity: -9.8"
-        vr-mode-ui="enabled: false"
-        ar-ground-placement>
-
-        <!-- Asset Management System -->
-        <a-assets timeout="30000">
-            <a-asset-item id="ferrari" src="models/ferrari.glb"></a-asset-item>
-            <a-asset-item id="lamborghini" src="models/lamborghini.glb"></a-asset-item>
-            <a-asset-item id="muscle" src="models/muscle.glb"></a-asset-item>
+    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix;">
+        <!-- Great Wall of China -->
+        <a-assets>
+            <video id="great-wall-video" src="videos/great-wall.mp4" preload="auto" loop="true"></video>
         </a-assets>
+        <a-marker type="pattern" url="markers/great-wall.patt">
+            <a-video src="#great-wall-video" position="0 0.1 0" rotation="-90 0 0" width="2" height="1.5"></a-video>
+        </a-marker>
 
-        <!-- Camera -->
-        <a-entity camera position="0 1.6 0" look-controls="enabled: false">
-            <a-entity raycaster="objects: .collidable" cursor="rayOrigin: mouse"></a-entity>
-        </a-entity>
+        <!-- Taj Mahal -->
+        <a-assets>
+            <video id="taj-mahal-video" src="videos/taj-mahal.mp4" preload="auto" loop="true"></video>
+        </a-assets>
+        <a-marker type="pattern" url="markers/taj-mahal.patt">
+            <a-video src="#taj-mahal-video" position="0 0.1 0" rotation="-90 0 0" width="2" height="1.5"></a-video>
+        </a-marker>
 
-        <!-- Ground Plane -->
-        <a-plane class="collidable"
-                 position="0 0 0"
-                 rotation="-90 0 0"
-                 width="100"
-                 height="100"
-                 visible="false"
-                 static-body></a-plane>
-
+        <a-entity camera></a-entity>
     </a-scene>
+
+    <div class="ui-overlay">
+        <div class="instruction-box">
+            <h3>Available Markers:</h3>
+            <ul>
+                <li>Great Wall of China</li>
+                <li>Taj Mahal</li>
+                <!-- Add more markers as you include them -->
+            </ul>
+        </div>
+    </div>
 
     <script src="app.js"></script>
 </body>
-
 </html>
