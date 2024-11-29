@@ -9,13 +9,6 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body style="margin: 0; overflow: hidden;">
-    <div class="loading-screen" id="loadingScreen">
-        <div class="loading-content">
-            <h2>7 Wonders AR Experience</h2>
-            <p>Point your camera at an image of any of the 7 Wonders to see it come alive!</p>
-            <div class="loading-spinner"></div>
-        </div>
-    </div>
 
     <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix;">
         <!-- Great Wall of China -->
@@ -27,26 +20,15 @@
         </a-marker>
 
         <!-- Taj Mahal -->
-        <a-assets>
+        <!-- <a-assets>
             <video id="taj-mahal-video" src="videos/taj-mahal.mp4" preload="auto" loop="true"></video>
         </a-assets>
         <a-marker type="pattern" url="markers/taj-mahal.patt">
             <a-video src="#taj-mahal-video" position="0 0.1 0" rotation="-90 0 0" width="2" height="1.5"></a-video>
-        </a-marker>
+        </a-marker> -->
 
         <a-entity camera></a-entity>
     </a-scene>
-
-    <div class="ui-overlay">
-        <div class="instruction-box">
-            <h3>Available Markers:</h3>
-            <ul>
-                <li>Great Wall of China</li>
-                <li>Taj Mahal</li>
-                <!-- Add more markers as you include them -->
-            </ul>
-        </div>
-    </div>
 
     <script src="app.js"></script>
 </body>
