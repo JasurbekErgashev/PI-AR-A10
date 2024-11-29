@@ -18,13 +18,9 @@ AFRAME.registerComponent('ar-ground-placement', {
 
     init: function() {
         this.el.addEventListener('loaded', this.onSceneLoaded.bind(this));
-        this.groundPlane = document.querySelector('#ground');
         this.car = null;
         this.isPlacing = false;
-        this.raycaster = new AFRAME.THREE.Raycaster();
-        this.mouse = new AFRAME.THREE.Vector2();
-        this.onTouchMove = this.onTouchMove.bind(this);
-        this.onTouchEnd = this.onTouchEnd.bind(this);
+        this.groundHeight = 0;
         
         // Initialize touch state
         this.touchState = {
@@ -34,10 +30,37 @@ AFRAME.registerComponent('ar-ground-placement', {
             lastScale: 1,
             lastRotation: 0
         };
+
+        // Bind methods
+        this.onTouchMove = this.onTouchMove.bind(this);
+        this.onTouchEnd = this.onTouchEnd.bind(this);
+
+        // Add ground plane detection
+        this.initGroundPlane();
+    },
+
+    initGroundPlane: function() {
+        // Create an invisible plane for ground detection
+        const plane = document.createElement('a-plane');
+        plane.setAttribute('id', 'ground-plane');
+        plane.setAttribute('rotation', '-90 0 0');
+        plane.setAttribute('width', '100');
+        plane.setAttribute('height', '100');
+        plane.setAttribute('material', {
+            transparent: true,
+            opacity: 0
+        });
+        plane.setAttribute('class', 'groundplane');
+        this.el.sceneEl.appendChild(plane);
+
+        // Add AR.js hit-testing
+        const arSystem = this.el.sceneEl.systems['arjs'];
+        if (arSystem) {
+            arSystem.registerComponent(this);
+        }
     },
 
     onSceneLoaded: function() {
-        // Setup UI controls
         this.setupControls();
         
         // Add touch event listeners
@@ -49,7 +72,6 @@ AFRAME.registerComponent('ar-ground-placement', {
     },
 
     setupControls: function() {
-        // Car model selection
         const modelSelect = document.getElementById('carModel');
         modelSelect.addEventListener('change', () => {
             if (this.car) {
@@ -59,7 +81,6 @@ AFRAME.registerComponent('ar-ground-placement', {
             }
         });
 
-        // Car color selection
         const colorPicker = document.getElementById('carColor');
         colorPicker.addEventListener('input', () => {
             if (this.car) {
@@ -69,14 +90,12 @@ AFRAME.registerComponent('ar-ground-placement', {
             }
         });
 
-        // Place car button
         const placeButton = document.getElementById('placeCar');
         placeButton.addEventListener('click', () => {
             this.isPlacing = true;
             showFeedback('Tap on the ground to place the car', 2000);
         });
 
-        // Reset view button
         const resetButton = document.getElementById('resetView');
         resetButton.addEventListener('click', () => {
             if (this.car) {
@@ -97,13 +116,33 @@ AFRAME.registerComponent('ar-ground-placement', {
             this.touchState.lastPosition = { x: touch.clientX, y: touch.clientY };
 
             if (this.isPlacing || !this.car) {
-                const intersection = this.getRaycasterIntersection(touch);
-                if (intersection) {
-                    this.placeCar(intersection.point);
-                    this.isPlacing = false;
-                }
+                this.performHitTest(touch);
             }
         }
+    },
+
+    performHitTest: function(touch) {
+        const scene = this.el.sceneEl;
+        const arSystem = scene.systems['arjs'];
+        
+        if (!arSystem) return;
+
+        // Convert touch coordinates to normalized device coordinates
+        const x = (touch.clientX / window.innerWidth) * 2 - 1;
+        const y = -(touch.clientY / window.innerHeight) * 2 + 1;
+
+        // Perform hit test
+        arSystem.hitTest(x, y, (results) => {
+            if (results && results.length > 0) {
+                const hit = results[0];
+                this.placeCar({
+                    x: hit.position.x,
+                    y: hit.position.y,
+                    z: hit.position.z
+                });
+                this.isPlacing = false;
+            }
+        });
     },
 
     onTouchMove: function(event) {
@@ -115,7 +154,6 @@ AFRAME.registerComponent('ar-ground-placement', {
             const touch1 = event.touches[0];
             const touch2 = event.touches[1];
             
-            // Calculate rotation and scale
             const dx = touch2.clientX - touch1.clientX;
             const dy = touch2.clientY - touch1.clientY;
             const distance = Math.sqrt(dx * dx + dy * dy);
@@ -131,13 +169,13 @@ AFRAME.registerComponent('ar-ground-placement', {
                 );
                 this.car.setAttribute('scale', `${newScale} ${newScale} ${newScale}`);
 
-                // Handle rotation
+                // Handle rotation (only Y-axis)
                 const rotationDelta = (angle - this.touchState.lastRotation) * (180 / Math.PI);
                 const currentRotation = this.car.getAttribute('rotation');
                 this.car.setAttribute('rotation', {
-                    x: currentRotation.x,
+                    x: 0, // Lock X rotation
                     y: currentRotation.y + rotationDelta,
-                    z: currentRotation.z
+                    z: 0  // Lock Z rotation
                 });
             }
 
@@ -151,34 +189,13 @@ AFRAME.registerComponent('ar-ground-placement', {
         this.touchState.lastRotation = null;
     },
 
-    getRaycasterIntersection: function(touch) {
-        // Calculate mouse position in normalized device coordinates
-        this.mouse.x = (touch.clientX / window.innerWidth) * 2 - 1;
-        this.mouse.y = -(touch.clientY / window.innerHeight) * 2 + 1;
-
-        // Update the picking ray with the camera and mouse position
-        const camera = this.el.sceneEl.camera;
-        this.raycaster.setFromCamera(this.mouse, camera);
-
-        // Calculate objects intersecting the picking ray
-        const intersects = this.raycaster.intersectObject(this.el.sceneEl.object3D, true);
-        
-        return intersects.length > 0 ? intersects[0] : null;
-    },
-
     placeCar: function(position) {
-        // Remove existing car if any
         if (this.car) {
             this.car.parentNode.removeChild(this.car);
         }
 
-        // Create new car entity
         this.car = document.createElement('a-entity');
-        this.car.setAttribute('position', {
-            x: position.x,
-            y: position.y + 0.01, // Slight offset to prevent z-fighting
-            z: position.z
-        });
+        this.car.setAttribute('position', position);
         
         const modelId = document.getElementById('carModel').value;
         const color = document.getElementById('carColor').value;
@@ -188,7 +205,9 @@ AFRAME.registerComponent('ar-ground-placement', {
         this.car.setAttribute('shadow', 'cast: true; receive: true');
         this.car.setAttribute('material', { color: color, metalness: 0.8, roughness: 0.2 });
 
-        // Add to scene
+        // Add anchor to keep the car fixed in real-world space
+        this.car.setAttribute('ar-anchor', '');
+        
         this.el.sceneEl.appendChild(this.car);
         showFeedback('Car placed! Use two fingers to rotate and zoom', 3000);
     }
