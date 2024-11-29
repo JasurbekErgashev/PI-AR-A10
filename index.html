@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>AR Web Application</title>
+    <title>AR Car Viewer</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <script src="https://aframe.io/releases/1.4.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
@@ -11,16 +11,38 @@
 </head>
 
 <body style="margin: 0; overflow: hidden;">
-    <!-- UI Instructions Panel -->
+    <!-- UI Controls Panel -->
+    <div id="controlsPanel" class="controls-panel">
+        <h2>Car Customization</h2>
+        <div class="control-group">
+            <label>Car Model:</label>
+            <select id="carModel">
+                <option value="ferrari">Ferrari</option>
+                <option value="lamborghini">Lamborghini</option>
+                <option value="muscle">Muscle Car</option>
+            </select>
+        </div>
+        <div class="control-group">
+            <label>Car Color:</label>
+            <input type="color" id="carColor" value="#ff0000">
+        </div>
+        <div class="control-group">
+            <button id="placeCar">Place Car</button>
+            <button id="resetView">Reset View</button>
+        </div>
+    </div>
+
+    <!-- Instructions Panel -->
     <div id="instructionsPanel" class="instructions-panel">
         <h2>AR Instructions</h2>
         <p>1. Allow camera access</p>
-        <p>2. Point camera at Hiro marker</p>
-        <p>3. Interact with objects:</p>
+        <p>2. Point camera at the ground</p>
+        <p>3. Tap to place car or use 'Place Car' button</p>
+        <p>4. Interact with the car:</p>
         <ul>
-            <li>Pinch to scale</li>
-            <li>Swipe to rotate</li>
-            <li>Drag to move</li>
+            <li>Pinch to zoom</li>
+            <li>Rotate with two fingers</li>
+            <li>Use controls to customize</li>
         </ul>
         <button onclick="this.parentElement.style.display='none'">Got it!</button>
     </div>
@@ -30,63 +52,21 @@
 
     <!-- AR Scene -->
     <a-scene embedded arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
-        renderer="logarithmicDepthBuffer: true;" vr-mode-ui="enabled: false">
+        renderer="logarithmicDepthBuffer: true;" vr-mode-ui="enabled: false" ar-ground-placement>
 
-    <!-- Asset Management System -->
-    <a-assets timeout="10000">
-        <!-- High-quality 3D Models from Three.js Examples -->
-        <a-asset-item id="tokyo" src="https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/LittlestTokyo.glb" crossorigin="anonymous"></a-asset-item>
-        <!-- <a-asset-item id="soldier" src="https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/Soldier.glb" crossorigin="anonymous"></a-asset-item> -->
-        <!-- <a-asset-item id="car" src="https://raw.githubusercontent.com/mrdoob/three.js/dev/examples/models/gltf/ferrari.glb" crossorigin="anonymous"></a-asset-item> -->
-    </a-assets>
-
-        <!-- Marker -->
-        <a-marker preset="hiro" raycaster="objects: .clickable" emitevents="true">
-            <!-- Grid for visual feedback -->
-            <a-plane position="0 0 0" rotation="-90 0 0" width="2" height="2"
-                material="color: #fff; opacity: 0.3; wireframe: true">
-            </a-plane>
-
-            <!-- 3D Models with Enhanced Interactions -->
-            <a-entity position="0 1 0" 
-                      gltf-model="#tokyo" 
-                      class="clickable" 
-                      scale="1 1 1"
-                      animation-mixer
-                      shadow="cast: true; receive: true"
-                      dynamic-body>
-            </a-entity>
-
-            <!-- <a-entity position="-1 1 0" 
-                      gltf-model="#soldier" 
-                      class="clickable" 
-                      scale="0.3 0.3 0.3"
-                      animation-mixer
-                      shadow="cast: true; receive: true"
-                      dynamic-body>
-            </a-entity>
-
-            <a-entity position="1 1 0" 
-                      gltf-model="#car" 
-                      class="clickable" 
-                      scale="0.2 0.2 0.2"
-                      animation-mixer
-                      shadow="cast: true; receive: true"
-                      dynamic-body>
-            </a-entity> -->
-        </a-marker>
+        <!-- Asset Management System -->
+        <a-assets timeout="30000">
+            <a-asset-item id="ferrari" src="models/ferrari.glb"></a-asset-item>
+            <a-asset-item id="lamborghini" src="models/lamborghini.glb"></a-asset-item>
+            <a-asset-item id="muscle" src="models/muscle.glb"></a-asset-item>
+        </a-assets>
 
         <!-- Camera -->
-        <a-entity 
-            camera 
-            look-controls 
-            position="0 1.6 0"
-            zoom="1"
-            fov="80"
-            near="0.1"
-            far="1000"
-            mobile-camera-controls
-        ></a-entity>
+        <a-entity camera position="0 1.6 0"></a-entity>
+
+        <!-- Ground Plane for Car Placement -->
+        <a-plane id="ground" position="0 0 0" rotation="-90 0 0" width="100" height="100" visible="false"></a-plane>
+
     </a-scene>
 
     <script src="app.js"></script>
