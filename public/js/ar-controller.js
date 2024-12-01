@@ -10,19 +10,19 @@ class ARController {
                 url: './models/bugati_divo.glb',
                 scale: '0.04 0.04 0.04',
                 rotation: '0 180 0',
-                position: '0 0.5 -2'
+                position: '0 0 0'
             },
             model2: {
                 url: './models/ferrari_sf90_stradale.glb',
                 scale: '0.4 0.4 0.4',
                 rotation: '0 180 0',
-                position: '0 0.5 -2'
+                position: '0 0 0'
             },
             model3: {
                 url: './models/flamborghini_terzo_millennio.glb',
                 scale: '0.4 0.4 0.4',
                 rotation: '0 180 0',
-                position: '0 0.5 -2'
+                position: '0 0 0'
             }
         };
 
