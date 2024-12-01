@@ -8,7 +8,7 @@ This is a modern web-based Augmented Reality (AR) application that allows users 
 
 ## Video
 
-[https://youtu.be/](https://youtu.be/)
+[https://drive.google.com/file/d/1HNK1zW5a8zVwgpKDAnAq7MVzqs69ewh9/view?usp=sharing](https://drive.google.com/file/d/1HNK1zW5a8zVwgpKDAnAq7MVzqs69ewh9/view?usp=sharing)
 
 ## Group members
 
