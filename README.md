@@ -4,13 +4,13 @@ This is a modern web-based Augmented Reality (AR) application that allows users 
 
 ## Live here
 
-[https://ar-interactive-web.vercel.app/](https://ar-interactive-web.vercel.app/)
+[https://pi-ar-a10.vercel.app/](https://pi-ar-a10.vercel.app/)
 
 ## Video
 
 [https://youtu.be/](https://youtu.be/)
 
-## Members
+## Group members
 
 - Jasurbek Ergashev
 - Mukhtor Eshimov
@@ -19,7 +19,6 @@ This is a modern web-based Augmented Reality (AR) application that allows users 
 ## Features
 
 - Real-time AR visualization using A-Frame and AR.js
-- Marker-based AR tracking
 - Interactive 3D model manipulation:
   - Rotation using touch gestures
   - Scaling using pinch gestures
@@ -39,7 +38,7 @@ This is a modern web-based Augmented Reality (AR) application that allows users 
 
 1. Clone the repository:
    ```bash
-   git clone [your-repo-url]
+   git clone https://github.com/JasurbekErgashev/PI-AR-A10.git
    ```
 
 2. Install dependencies:
@@ -65,21 +64,3 @@ This is a modern web-based Augmented Reality (AR) application that allows users 
 4. Use touch gestures to:
    - Swipe to rotate in rotation mode
    - Pinch to scale in scaling mode
-
-## Project Structure
-
-```
-├── public/
-│   ├── css/
-│   │   └── styles.css
-│   ├── js/
-│   │   ├── ar-controller.js
-│   │   ├── interaction-handler.js
-│   │   └── ui-controller.js
-│   ├── models/
-│   │   └── [3D models in GLTF format]
-│   └── index.html
-├── server.js
-├── package.json
-└── README.md
-```
