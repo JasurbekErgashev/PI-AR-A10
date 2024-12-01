@@ -9,6 +9,20 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/aframe/1.4.2/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
+    <script>
+        AFRAME.registerComponent('screen-orientation', {
+            init: function () {
+                window.addEventListener('orientationchange', () => {
+                    setTimeout(() => {
+                        const scene = document.querySelector('a-scene');
+                        if (scene.renderer) {
+                            scene.renderer.setSize(window.innerWidth, window.innerHeight);
+                        }
+                    }, 100);
+                });
+            }
+        });
+    </script>
     <style>
         .arjs-loader {
             height: 100%;
@@ -55,9 +69,10 @@
 
     <a-scene
         embedded
+        screen-orientation
         vr-mode-ui="enabled: false"
         webxr="optionalFeatures: hit-test, dom-overlay;"
-        renderer="logarithmicDepthBuffer: true;">
+        renderer="logarithmicDepthBuffer: true; antialias: true; colorManagement: true;">
 
         <!-- Ground plane -->
         <a-plane position="0 0 0" 

@@ -7,25 +7,85 @@ class ARController {
         this.isScaling = false;
         this.models = {
             model1: {
-                url: '/models/bugati_divo.glb',
+                url: './models/bugati_divo.glb',
                 scale: '0.5 0.5 0.5',
                 rotation: '0 180 0',
                 position: '0 0 0'
             },
             model2: {
-                url: '/models/ferrari_sf90_stradale.glb',
+                url: './models/ferrari_sf90_stradale.glb',
                 scale: '0.3 0.3 0.3',
                 rotation: '0 180 0',
                 position: '0 0 0'
             },
             model3: {
-                url: '/models/flamborghini_terzo_millennio.glb',
+                url: './models/flamborghini_terzo_millennio.glb',
                 scale: '0.4 0.4 0.4',
                 rotation: '0 180 0',
                 position: '0 0 0'
             }
         };
         this.setupEventListeners();
+        this.preloadModels();
+    }
+
+    preloadModels() {
+        // Preload all models
+        Object.values(this.models).forEach(model => {
+            const loader = new THREE.GLTFLoader();
+            loader.load(model.url, 
+                () => console.log(`Preloaded: ${model.url}`),
+                undefined,
+                (error) => console.error(`Error preloading model: ${model.url}`, error)
+            );
+        });
+    }
+
+    async loadModel(modelKey) {
+        try {
+            if (this.currentModel) {
+                this.modelContainer.removeChild(this.currentModel);
+            }
+
+            const modelConfig = this.models[modelKey];
+            const model = document.createElement('a-entity');
+            
+            // Show loading feedback
+            this.showFeedback('Loading model...');
+
+            // Set initial attributes
+            model.setAttribute('scale', modelConfig.scale);
+            model.setAttribute('rotation', modelConfig.rotation);
+            model.setAttribute('position', modelConfig.position);
+            model.setAttribute('class', 'clickable');
+            model.dataset.modelKey = modelKey;
+
+            // Create a promise for model loading
+            const modelLoaded = new Promise((resolve, reject) => {
+                model.addEventListener('model-loaded', resolve);
+                model.addEventListener('model-error', reject);
+            });
+
+            // Set the model URL last to trigger loading
+            model.setAttribute('gltf-model', modelConfig.url);
+            
+            // Add to scene
+            this.modelContainer.appendChild(model);
+            this.currentModel = model;
+
+            // Wait for model to load
+            await modelLoaded;
+            this.showFeedback(`${modelKey.replace('model', 'Car ')} loaded successfully!`);
+        } catch (error) {
+            console.error('Error loading model:', error);
+            this.showFeedback('Error loading model. Please try again.');
+            
+            // Remove failed model
+            if (this.currentModel) {
+                this.modelContainer.removeChild(this.currentModel);
+                this.currentModel = null;
+            }
+        }
     }
 
     setupEventListeners() {
@@ -89,32 +149,6 @@ class ARController {
             this.isRotating = false;
             this.updateButtonStates();
         });
-    }
-
-    loadModel(modelKey) {
-        if (this.currentModel) {
-            this.modelContainer.removeChild(this.currentModel);
-        }
-
-        const modelConfig = this.models[modelKey];
-        const model = document.createElement('a-entity');
-        model.setAttribute('gltf-model', modelConfig.url);
-        model.setAttribute('scale', modelConfig.scale);
-        model.setAttribute('rotation', modelConfig.rotation);
-        model.setAttribute('position', modelConfig.position);
-        model.setAttribute('class', 'clickable');
-        model.dataset.modelKey = modelKey;
-
-        model.addEventListener('model-loaded', () => {
-            this.showFeedback(`${modelKey.replace('model', 'Car ')} loaded successfully!`);
-        });
-
-        model.addEventListener('model-error', () => {
-            this.showFeedback(`Error loading ${modelKey.replace('model', 'Car ')}. Please try again.`);
-        });
-
-        this.modelContainer.appendChild(model);
-        this.currentModel = model;
     }
 
     updateButtonStates() {
