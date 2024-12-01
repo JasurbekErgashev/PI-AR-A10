@@ -97,9 +97,14 @@ body {
     padding: 8px 12px;
     border-radius: 15px;
     cursor: pointer;
-    transition: transform 0.2s;
+    transition: transform 0.2s, background-color 0.3s;
     font-size: 13px;
     white-space: nowrap;
+}
+
+.model-btn.active {
+    background: #2ecc71;
+    transform: scale(1.05);
 }
 
 .model-btn:hover {

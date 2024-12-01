@@ -8,37 +8,62 @@ class ARController {
         this.models = {
             model1: {
                 url: './models/bugati_divo.glb',
-                scale: '0.5 0.5 0.5',
+                scale: '0.04 0.04 0.04',
                 rotation: '0 180 0',
-                position: '0 0 0'
+                position: '0 0.5 -2'
             },
             model2: {
                 url: './models/ferrari_sf90_stradale.glb',
-                scale: '0.3 0.3 0.3',
+                scale: '0.4 0.4 0.4',
                 rotation: '0 180 0',
-                position: '0 0 0'
+                position: '0 0.5 -2'
             },
             model3: {
                 url: './models/flamborghini_terzo_millennio.glb',
                 scale: '0.4 0.4 0.4',
                 rotation: '0 180 0',
-                position: '0 0 0'
+                position: '0 0.5 -2'
             }
         };
+
+        // Cache for loaded models
+        this.modelCache = new Map();
+        
         this.setupEventListeners();
-        this.preloadModels();
+        this.preloadModels().then(() => {
+            // Auto-load the first model after preloading
+            this.loadModel('model1');
+            // Highlight the first button
+            document.querySelector('[data-model="model1"]').classList.add('active');
+        });
     }
 
-    preloadModels() {
-        // Preload all models
-        Object.values(this.models).forEach(model => {
-            const loader = new THREE.GLTFLoader();
-            loader.load(model.url, 
-                () => console.log(`Preloaded: ${model.url}`),
-                undefined,
-                (error) => console.error(`Error preloading model: ${model.url}`, error)
-            );
+    async preloadModels() {
+        const loader = new THREE.GLTFLoader();
+        const loadPromises = Object.entries(this.models).map(([key, model]) => {
+            return new Promise((resolve, reject) => {
+                loader.load(
+                    model.url,
+                    (gltf) => {
+                        this.modelCache.set(key, gltf);
+                        resolve();
+                    },
+                    (progress) => {
+                        const percent = (progress.loaded / progress.total * 100).toFixed(0);
+                        this.showFeedback(`Loading ${key}: ${percent}%`);
+                    },
+                    reject
+                );
+            });
         });
+
+        try {
+            await Promise.all(loadPromises);
+            this.showFeedback('All models loaded!');
+        } catch (error) {
+            console.error('Error preloading models:', error);
+            this.showFeedback('Error loading models. Please refresh.');
+        }
     }
 
     async loadModel(modelKey) {
@@ -50,9 +75,6 @@ class ARController {
             const modelConfig = this.models[modelKey];
             const model = document.createElement('a-entity');
             
-            // Show loading feedback
-            this.showFeedback('Loading model...');
-
             // Set initial attributes
             model.setAttribute('scale', modelConfig.scale);
             model.setAttribute('rotation', modelConfig.rotation);
@@ -60,27 +82,39 @@ class ARController {
             model.setAttribute('class', 'clickable');
             model.dataset.modelKey = modelKey;
 
+            // Use cached model if available
+            if (this.modelCache.has(modelKey)) {
+                model.setAttribute('gltf-model', modelConfig.url);
+            } else {
+                this.showFeedback('Loading model...');
+                model.setAttribute('gltf-model', modelConfig.url);
+            }
+
             // Create a promise for model loading
             const modelLoaded = new Promise((resolve, reject) => {
-                model.addEventListener('model-loaded', resolve);
-                model.addEventListener('model-error', reject);
+                model.addEventListener('model-loaded', resolve, { once: true });
+                model.addEventListener('model-error', reject, { once: true });
             });
 
-            // Set the model URL last to trigger loading
-            model.setAttribute('gltf-model', modelConfig.url);
-            
             // Add to scene
             this.modelContainer.appendChild(model);
             this.currentModel = model;
 
+            // Update button states
+            document.querySelectorAll('.model-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.model === modelKey) {
+                    btn.classList.add('active');
+                }
+            });
+
             // Wait for model to load
             await modelLoaded;
-            this.showFeedback(`${modelKey.replace('model', 'Car ')} loaded successfully!`);
+            this.showFeedback(`${modelKey.replace('model', 'Car ')} ready!`);
         } catch (error) {
             console.error('Error loading model:', error);
             this.showFeedback('Error loading model. Please try again.');
             
-            // Remove failed model
             if (this.currentModel) {
                 this.modelContainer.removeChild(this.currentModel);
                 this.currentModel = null;
@@ -133,7 +167,14 @@ class ARController {
                 const modelConfig = this.models[this.currentModel.dataset.modelKey];
                 const baseScale = parseFloat(modelConfig.scale.split(' ')[0]);
                 const newScale = baseScale * scaleFactor;
-                this.currentModel.setAttribute('scale', `${newScale} ${newScale} ${newScale}`);
+                
+                // Add limits to prevent models from getting too big or too small
+                const minScale = baseScale * 0.5;  // minimum 50% of original size
+                const maxScale = baseScale * 2.0;  // maximum 200% of original size
+                const clampedScale = Math.min(Math.max(newScale, minScale), maxScale);
+                
+                this.currentModel.setAttribute('scale', `${clampedScale} ${clampedScale} ${clampedScale}`);
+                initialDistance = currentDistance; // Update distance for next move
             }
         });
 
