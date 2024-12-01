@@ -55,19 +55,34 @@
 
     <a-scene
         embedded
-        arjs='sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix;'
-        renderer="logarithmicDepthBuffer: true;"
-        vr-mode-ui="enabled: false">
+        vr-mode-ui="enabled: false"
+        webxr="optionalFeatures: hit-test, dom-overlay;"
+        renderer="logarithmicDepthBuffer: true;">
 
-        <a-marker preset="hiro" smooth="true" smoothCount="5">
-            <!-- 3D models will be added here dynamically -->
-        </a-marker>
+        <!-- Ground plane -->
+        <a-plane position="0 0 0" 
+                 rotation="-90 0 0" 
+                 width="100" 
+                 height="100" 
+                 color="#7BC8A4" 
+                 visible="false"></a-plane>
 
-        <a-entity camera></a-entity>
+        <!-- Camera with raycaster -->
+        <a-entity camera position="0 1.6 2" look-controls="enabled: false">
+            <a-entity cursor="fuse: false; rayOrigin: mouse;"
+                      raycaster="objects: .clickable"
+                      position="0 0 -1"
+                      geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
+                      material="color: white; shader: flat">
+            </a-entity>
+        </a-entity>
 
-        <!-- Scene lighting -->
+        <!-- Model container -->
+        <a-entity id="model-container" position="0 0 -2"></a-entity>
+
+        <!-- Lighting -->
         <a-entity light="type: ambient; intensity: 0.5"></a-entity>
-        <a-entity light="type: directional; intensity: 0.8" position="-1 1 0"></a-entity>
+        <a-entity light="type: directional; intensity: 0.8; castShadow: true" position="-1 1 0"></a-entity>
     </a-scene>
 
     <script src="/js/ar-controller.js"></script>
