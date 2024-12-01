@@ -1,82 +1,85 @@
-# Advanced Web AR Application
+# Interactive Web-Based AR Application
 
-An immersive Augmented Reality (AR) web application showcasing interactive 3D models with enhanced user experience.
+This is a modern web-based Augmented Reality (AR) application that allows users to interact with 3D objects in their real environment using their device's camera.
 
-## 🚀 Features
+## Live here
 
-### Advanced 3D Interactions
-- High-quality 3D models (Robot, Astronaut, Car)
-- Dynamic object selection and highlighting
-- Complex touch-based interactions
-  - Rotation with variable speed
-  - Precise scaling with boundary limits
-  - Object-specific animations
+[https://ar-interactive-web.vercel.app/](https://ar-interactive-web.vercel.app/)
 
-### Refined User Experience
-- Modern, responsive UI design
-- Smooth animations and transitions
-- Detailed marker detection feedback
-- Intuitive touch controls
+## Video
 
-### Technical Highlights
-- A-Frame WebXR integration
-- Responsive mobile-first design
-- Advanced AR.js marker tracking
-- Dynamic asset loading
-- Enhanced interaction component
+[https://youtu.be/](https://youtu.be/)
 
-## 🛠 Setup & Requirements
+## Members
 
-### Prerequisites
+- Jasurbek Ergashev
+- Mukhtor Eshimov
+- Munira Rakhmatova
+
+## Features
+
+- Real-time AR visualization using A-Frame and AR.js
+- Marker-based AR tracking
+- Interactive 3D model manipulation:
+  - Rotation using touch gestures
+  - Scaling using pinch gestures
+  - Multiple model selection
+- Modern UI with intuitive controls
+- Real-time feedback and instructions
+- Responsive design for mobile devices
+
+## Prerequisites
+
+- Node.js (v14 or higher)
+- NPM (v6 or higher)
 - Modern web browser with WebXR support
-- Smartphone or tablet with camera
-- Stable internet connection
+- Device with camera access
 
-### Installation
-1. Clone the repository
-2. Serve using a local server
+## Installation
+
+1. Clone the repository:
    ```bash
-   python -m http.server
-   # or
-   npx http-server
+   git clone [your-repo-url]
    ```
-3. Open in AR-compatible browser
-4. Point camera at Hiro marker
 
-## 📱 Interaction Guide
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-### Object Interactions
-- **Select**: Tap on 3D model
-- **Rotate**: Single-finger drag
-- **Scale**: Two-finger pinch/spread
-- **Animate**: Automatic on selection
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
-### Marker Detection
-- Look for Hiro marker
-- Maintain steady camera position
-- Explore 3D models in AR space
+4. Open your browser and navigate to `http://localhost:3000`
 
-## 🔧 Customization
+## Usage
 
-Easily modify:
-- 3D model sources
-- Interaction parameters
-- Visual styles
-- Touch control sensitivity
+1. Allow camera access when prompted
+2. Point your camera at a flat surface
+3. Use the on-screen controls to:
+   - Select different 3D models
+   - Toggle rotation mode
+   - Toggle scaling mode
+4. Use touch gestures to:
+   - Swipe to rotate in rotation mode
+   - Pinch to scale in scaling mode
 
-## 🌐 Technologies
+## Project Structure
 
-- A-Frame
-- AR.js
-- Three.js
-- WebXR
-- CSS Animations
-
-<!-- ## 📄 License
-
-MIT License
-
-## 🤝 Contributing
-
-Contributions welcome! 
-Please read our contributing guidelines before getting started. -->
+```
+├── public/
+│   ├── css/
+│   │   └── styles.css
+│   ├── js/
+│   │   ├── ar-controller.js
+│   │   ├── interaction-handler.js
+│   │   └── ui-controller.js
+│   ├── models/
+│   │   └── [3D models in GLTF format]
+│   └── index.html
+├── server.js
+├── package.json
+└── README.md
+```
