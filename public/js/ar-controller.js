@@ -46,20 +46,28 @@ class ARController {
                     model.url,
                     (gltf) => {
                         this.modelCache.set(key, gltf);
+                        this.showFeedback(`${key.replace('model', 'Car ')} loaded`);
                         resolve();
                     },
                     (progress) => {
-                        const percent = (progress.loaded / progress.total * 100).toFixed(0);
-                        this.showFeedback(`Loading ${key}: ${percent}%`);
+                        if (progress.lengthComputable && progress.total > 0) {
+                            const percent = (progress.loaded / progress.total * 100).toFixed(0);
+                            this.showFeedback(`Loading ${key.replace('model', 'Car ')}: ${percent}%`);
+                        } else {
+                            this.showFeedback(`Loading ${key.replace('model', 'Car ')}...`);
+                        }
                     },
-                    reject
+                    (error) => {
+                        console.error(`Error loading ${key}:`, error);
+                        reject(error);
+                    }
                 );
             });
         });
 
         try {
             await Promise.all(loadPromises);
-            this.showFeedback('All models loaded!');
+            this.showFeedback('Ready!');
         } catch (error) {
             console.error('Error preloading models:', error);
             this.showFeedback('Error loading models. Please refresh.');
@@ -201,15 +209,27 @@ class ARController {
     }
 
     showFeedback(message) {
+        // Remove any existing feedback messages
+        const existingFeedback = document.querySelectorAll('.feedback-message');
+        existingFeedback.forEach(el => el.remove());
+
         const feedback = document.createElement('div');
         feedback.className = 'feedback-message';
         feedback.textContent = message;
         document.body.appendChild(feedback);
 
-        setTimeout(() => feedback.classList.add('show'), 100);
+        // Add show class after a brief delay to ensure animation works
+        requestAnimationFrame(() => {
+            feedback.classList.add('show');
+        });
+
         setTimeout(() => {
             feedback.classList.remove('show');
-            setTimeout(() => document.body.removeChild(feedback), 300);
+            setTimeout(() => {
+                if (feedback.parentNode) {
+                    feedback.parentNode.removeChild(feedback);
+                }
+            }, 300);
         }, 2000);
     }
 }

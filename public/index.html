@@ -68,11 +68,12 @@
 
     <a-scene
         embedded
-        screen-orientation
         vr-mode-ui="enabled: false"
-        webxr="optionalFeatures: hit-test, dom-overlay;"
-        renderer="logarithmicDepthBuffer: true; antialias: true; colorManagement: true;">
-
+        renderer="logarithmicDepthBuffer: true;"
+        arjs="trackingMethod: best; sourceType: webcam; debugUIEnabled: false;"
+        cursor="rayOrigin: mouse; fuse: false"
+        raycaster="objects: .clickable"
+    >
         <!-- Ground plane -->
         <a-plane position="0 0 0" 
                  rotation="-90 0 0" 
@@ -81,15 +82,8 @@
                  color="#7BC8A4" 
                  visible="false"></a-plane>
 
-        <!-- Camera with raycaster -->
-        <a-entity camera position="0 1.6 2" look-controls="enabled: false">
-            <a-entity cursor="fuse: false; rayOrigin: mouse;"
-                      raycaster="objects: .clickable"
-                      position="0 0 -1"
-                      geometry="primitive: ring; radiusInner: 0.02; radiusOuter: 0.03"
-                      material="color: white; shader: flat">
-            </a-entity>
-        </a-entity>
+        <!-- Camera -->
+        <a-entity camera position="0 1.6 0"></a-entity>
 
         <!-- Model container -->
         <a-entity id="model-container" position="0 0 -2"></a-entity>

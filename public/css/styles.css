@@ -117,23 +117,35 @@ body {
 
 .feedback-message {
     position: fixed;
-    top: 20px;
+    bottom: 20%;
     left: 50%;
-    transform: translateX(-50%);
-    background: var(--overlay-bg);
-    color: var(--text-color);
-    padding: 10px 20px;
-    border-radius: 20px;
+    transform: translateX(-50%) translateY(20px);
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 16px;
     opacity: 0;
-    transition: opacity 0.3s;
-    font-size: 14px;
-    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+    z-index: 1000;
+    pointer-events: none;
+    text-align: center;
     white-space: nowrap;
-    z-index: 1001;
 }
 
 .feedback-message.show {
     opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Style the reticle to be more subtle */
+.a-entity-cursor {
+    border: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Hide the default cursor dot in the center */
+.a-cursor-dot {
+    display: none !important;
 }
 
 @media (max-width: 480px) {
